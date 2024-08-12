@@ -1,15 +1,16 @@
 import requests
 from Especie import Especie
 from moduloPelicula import moduloPelicula
-response = requests.get("https://www.swapi.tech/api/species/")
+response_especies = requests.get("https://www.swapi.tech/api/species/")
+response_peliculas = requests.get("https://www.swapi.tech/api/films")
 
 
 class moduloEspecie:
-    def __init__(self, response, moduloPelicula):
+    def __init__(self, response_especies, moduloPelicula):
         """
          Se crea cada especie como un objeto con la informacion de la API
         """
-        self.especies = response.json()
+        self.especies = response_especies.json()
         self.lista_especies = []
 
         for i in range(len(self.especies["results"])):  
@@ -32,31 +33,32 @@ class moduloEspecie:
                 info_personaje = link.json()
                 lista_personajes.append(info_personaje["result"]["properties"]["name"])  
 
+            #Se llama a la clase moduloPelicula
+            peliculas = moduloPelicula
             #Se guardan los episodios en los que ha aparecido la especie en una lista  
-            for pelicula in moduloPelicula(response):
-                if self.especies["results"][i]["name"] in pelicula.especies:
+            for pelicula in peliculas.lista_peliculas:
+                if info["result"]["properties"]["classification"] in pelicula.especies:
                     lista_episodios.append(pelicula.titulo)
 
             #Se obtiene el nombre del planeta madre
-            homeworld_url = self.especies["results"][i]["homeworld"]
+            homeworld_url = info["result"]["properties"]["homeworld"]
             homeworld = requests.get(homeworld_url)
             homeworld_info = homeworld.json()
             homeworld_name = homeworld_info["result"]["properties"]["name"]
 
-            self.lista_especies.append(Especie(self.especies["results"][i]["name"], 
-                                            self.especies["results"][i]["average_height"],
-                                            self.especies["results"][i]["classification"],
+            self.lista_especies.append(Especie(info["result"]["properties"]["name"], 
+                                            info["result"]["properties"]["average_height"],
+                                            info["result"]["properties"]["classification"],
                                             homeworld_name,
-                                            self.especies["results"][i]["language"],
+                                            info["result"]["properties"]["language"],
                                             lista_personajes,
                                             lista_episodios
                                             ))
-
-x = moduloPelicula(response)
-for i in x.lista_peliculas:
-    i.mostrar_pelicula()
-modulo = moduloEspecie(response, x)
+'''
+x = moduloPelicula(response_peliculas)
+modulo = moduloEspecie(response_especies, x)
 for especie in modulo.lista_especies:
     especie.mostrar_especie()
 
-        
+'''
+
