@@ -1,19 +1,12 @@
 import requests
-<<<<<<< HEAD
 import csv
 import pandas as pd
 import matplotlib.pyplot as plt
-=======
->>>>>>> main
 from Planeta import Planeta
 from moduloPelicula import moduloPelicula
 from moduloPersonaje import moduloPersonaje
 from moduloVehiculo import moduloVehiculo
-<<<<<<< HEAD
-from moduloEspecie import moduloEspecie
-=======
 from ModuloEspecie import moduloEspecie
->>>>>>> main
 from moduloNave import moduloNave
 response_especies = requests.get("https://www.swapi.tech/api/species/")
 response_peliculas = requests.get("https://www.swapi.tech/api/films")
@@ -74,7 +67,6 @@ class moduloPlaneta:
                                                         lista_personajes,
                                                         lista_episodios
                                                         ))
-<<<<<<< HEAD
             
     def mostrar_grafico(self):
         #Se crea la lista donde se almacenan los datos a representar de cada planeta
@@ -115,17 +107,4 @@ class moduloPlaneta:
         #Se visualiza el gráfico
         plt.show()
 
-=======
-
-'''
-peliculas = moduloPelicula(response_peliculas)
-vehiculos = moduloVehiculo(response_vehiculos)
-naves = moduloNave(response_naves)
-especies = moduloEspecie(response_especies, peliculas)
-personajes = moduloPersonaje(response_personajes, peliculas, especies, naves, vehiculos)
-modulo_planetas = moduloPlaneta(response_planetas, peliculas, personajes)
-for planeta in modulo_planetas.lista_planetas:
-    planeta.mostrar_planeta()
-'''
->>>>>>> main
 
