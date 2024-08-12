@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from moduloPelicula import moduloPelicula
 from moduloPersonaje import moduloPersonaje
 from moduloVehiculo import moduloVehiculo
-from moduloEspecie import moduloEspecie
+from ModuloEspecie import moduloEspecie
 from moduloNave import moduloNave
 from moduloPlaneta import moduloPlaneta
 response_especies = requests.get("https://www.swapi.tech/api/species/")

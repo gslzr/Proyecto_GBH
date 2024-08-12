@@ -6,6 +6,7 @@ from moduloVehiculo import moduloVehiculo
 from ModuloEspecie import moduloEspecie
 from moduloNave import moduloNave
 from moduloPlaneta import moduloPlaneta
+from moduloGraficos import moduloGraficos
 response_especies = requests.get("https://www.swapi.tech/api/species/")
 response_peliculas = requests.get("https://www.swapi.tech/api/films")
 response_planetas = requests.get("https://www.swapi.tech/api/planets")
@@ -19,9 +20,10 @@ naves = moduloNave(response_naves)
 especies = moduloEspecie(response_especies, peliculas)
 personajes = moduloPersonaje(response_personajes, peliculas, especies, naves, vehiculos)
 planetas = moduloPlaneta(response_planetas, peliculas, personajes)
+graficos = moduloGraficos(planetas, naves)
 
 while True:
-    opcion_menu = input("\nBienvenido al módulo de información de la saga Star Wars. ¿Qué acción desea realizar? \n1. Ver lista de películas de la saga \n2. Ver lista de especies de seres vivos de la saga \n3. Ver lista de planetas \n4. Buscar personaje \n5. Salir")
+    opcion_menu = input("\nBienvenido al módulo de información de la saga Star Wars. ¿Qué acción desea realizar? \n1. Ver lista de películas de la saga \n2. Ver lista de especies de seres vivos de la saga \n3. Ver lista de planetas \n4. Buscar personaje \n5. Ver gráficos y tablas \n6. Salir \n")
 
     if opcion_menu == "1":
         for pelicula in peliculas.lista_peliculas:
@@ -38,10 +40,12 @@ while True:
     elif opcion_menu == "4":
         personajes.buscar_personaje()
 
+    elif opcion_menu == "5":
+        graficos.menuGraficos()
+
     elif opcion_menu == "6":
         print("¡Hasta luego!")
         break
 
     else: 
         print("\nIngrese una opción válida.")
-
