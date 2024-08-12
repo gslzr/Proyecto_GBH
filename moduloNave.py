@@ -1,8 +1,11 @@
 import requests
+<<<<<<< HEAD
 import pandas as pd
 import matplotlib.pyplot as plt
 import csv
 from statistics import mean, mode
+=======
+>>>>>>> main
 from Nave import Nave
 response = requests.get("https://www.swapi.tech/api/starships")
 
@@ -43,6 +46,7 @@ class moduloNave:
                                         info["result"]["properties"]["cost_in_credits"],
                                         lista_pilotos
                                         ))
+<<<<<<< HEAD
             
 
 
@@ -267,3 +271,10 @@ class moduloNave:
         ]
         stats = stats.round(2)
         print(stats)
+=======
+'''
+modulo = moduloNave(response)
+for nave in modulo.lista_naves:
+    nave.mostrar_nave()
+'''
+>>>>>>> main
