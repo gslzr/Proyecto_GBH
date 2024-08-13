@@ -1,6 +1,7 @@
 class Nave:
-    def __init__(self, nombre, longitud, capacidad_carga, clasificacion_hiperimpulsor, MGLT, velocidad_maxima_atmosfera, costo, pilotos):
+    def __init__(self, nombre, clase, longitud, capacidad_carga, clasificacion_hiperimpulsor, MGLT, velocidad_maxima_atmosfera, costo, pilotos):
         self.nombre = nombre
+        self.clase = clase
         self.longitud = longitud  
         self.capacidad_carga = capacidad_carga  
         self.clasificacion_hiperimpulsor = clasificacion_hiperimpulsor  
@@ -11,6 +12,7 @@ class Nave:
 
     def mostrar_nave(self):
         print("\nNombre: ", self.nombre,
+              "\nClase: ", self.clase,
               "\nLongitud: ", self.longitud,
               "\nCapacidad de Carga: ", self.capacidad_carga,
               "\nClasificación de Hiperimpulsor: ", self.clasificacion_hiperimpulsor,
