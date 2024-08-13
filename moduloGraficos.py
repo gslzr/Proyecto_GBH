@@ -29,7 +29,7 @@ class moduloGraficos:
 
     def menuGraficos (self):
         while True:
-            opcion_menu = input("\nBienvenido al módulo de gráficos y tablas. ¿Qué desea visualizar? \n1. Cantidad de personajes originarios de cada planeta \n2. Comparación longitud de naves \n3. Comparación capacidad de carga de naves \n4. Comparación de hiperimpulsor de naves \n5. Comparación MGLT de naves \n6. Estadísticas sobre naves \n7. Salir\n")
+            opcion_menu = input("\nBienvenido al módulo de gráficos y tablas. ¿Qué desea visualizar? \n1. Cantidad de personajes originarios de cada planeta \n2. Comparación longitud de naves \n3. Comparación capacidad de carga de naves \n4. Comparación de hiperimpulsor de naves \n5. Comparación MGLT de naves \n6. Estadísticas MGLT \n7. Estadisticas Hiperimpulsores \n8. Estadisticas Velocidad Maxima en Atmosfera \n9. Estadisticas Costos en Creditos \n10. Salir \n")
 
             if opcion_menu == "1":
                 self.planetas.mostrar_grafico()
@@ -47,9 +47,18 @@ class moduloGraficos:
                 self.naves.grafico_MGLT()
 
             elif opcion_menu == "6":
-                self.naves.tabla_estadisticas()
+                self.naves.generar_tabla_mglt()
 
             elif opcion_menu == "7":
+                self.naves.generar_tabla_hiperimpulsor()
+
+            elif opcion_menu == "8":
+                self.naves.generar_tabla_velocidad()
+
+            elif opcion_menu == "9":
+                self.naves.generar_tabla_costo()
+
+            elif opcion_menu == "10":
                 print("¡Hasta luego!")
                 break
 
@@ -60,5 +69,3 @@ class moduloGraficos:
 graficos = moduloGraficos(planetas, naves)
 graficos.menuGraficos()
 '''
-
-
