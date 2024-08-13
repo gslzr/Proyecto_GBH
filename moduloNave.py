@@ -1,5 +1,6 @@
 import requests
 import pandas as pd
+
 import matplotlib.pyplot as plt
 import csv
 from statistics import mean, mode
@@ -35,6 +36,7 @@ class moduloNave:
                 lista_pilotos.append(info_piloto["result"]["properties"]["name"]) 
 
             self.lista_naves.append(Nave(info["result"]["properties"]["name"], 
+                                         info["result"]["properties"]["starship_class"], 
                                         info["result"]["properties"]["length"],
                                         info["result"]["properties"]["cargo_capacity"],
                                         info["result"]["properties"]["hyperdrive_rating"],
@@ -214,22 +216,63 @@ class moduloNave:
         #Se visualiza el gráfico
         plt.show()
 
-    def tabla_estadisticas(self):
-        nombres = []
-        hiperimpulsores = []
+    def generar_tabla_mglt(self):
+        clases = []
         MGLT = []
-        velocidades = []
-        costo_creditos = []
-        
         for nave in self.lista_naves:
-            nombres.append(nave.nombre)
-            #Se utiliza float para convertir los valores a formato numerico con decimales y poder sacar las cuentas
-            if nave.clasificacion_hiperimpulsor == "n/a":
-                nave.clasificacion_hiperimpulsor = 0
-            hiperimpulsores.append(float(nave.clasificacion_hiperimpulsor))
+            clases.append(nave.clase)
+            #Se reemplazan los "n/a" por 0 para poder realizar los calculos numericos
             if nave.MGLT == "n/a":
                 nave.MGLT = 0
+            #Se convierte el MGLT a formato float (numerico con decimales) para poder realizar los calculos y se agregan a una lista    
             MGLT.append(float(nave.MGLT))
+
+        #Se crea el dataframe de pandas con las listas creadas anteriormente
+        df = pd.DataFrame({
+            'Clase': clases,
+            'MGLT': MGLT
+        })
+
+        #Se agrupa por clase y se calculan las estadísticas
+        tabla_estadisticas = df.groupby('Clase')['MGLT'].agg(['mean', 'max', 'min']).reset_index()
+        tabla_estadisticas['moda'] = df.groupby('Clase')['MGLT'].apply(lambda x: x.mode()[0]).values
+
+        #Se renombran las columnas para mayor claridad
+        tabla_estadisticas.columns = ['Clase', 'Promedio MGLT', 'Máximo MGLT', 'Mínimo MGLT', 'Moda MGLT']
+
+        print(tabla_estadisticas)
+
+    def generar_tabla_hiperimpulsor(self):
+        clases = []
+        hiperimpulsores = []
+        for nave in self.lista_naves:
+            clases.append(nave.clase)
+            #Se reemplazan los "n/a" por 0 para poder realizar los calculos numericos
+            if nave.clasificacion_hiperimpulsor == "n/a":
+                nave.clasificacion_hiperimpulsor = 0
+            #Se convierte el MGLT a formato float (numerico con decimales) para poder realizar los calculos y se agregan a una lista    
+            hiperimpulsores.append(float(nave.clasificacion_hiperimpulsor))
+
+        #Se crea el dataframe de pandas con las listas creadas anteriormente
+        df = pd.DataFrame({
+            'Clase': clases,
+            'Clasificacion Hiperimpulsor': hiperimpulsores
+        })
+
+        #Se agrupa por clase y se calculan las estadísticas
+        tabla_estadisticas = df.groupby('Clase')['Capacidad Hiperimpulsor'].agg(['mean', 'max', 'min']).reset_index()
+        tabla_estadisticas['moda'] = df.groupby('Clase')['Capacidad Hiperimpulsor'].apply(lambda x: x.mode()[0]).values
+
+        #Se renombran las columnas para mayor claridad
+        tabla_estadisticas.columns = ['Clase', 'Promedio Hiperimpulsor', 'Máximo Hiperimpulsor', 'Mínimo Hiperimpulsor', 'Moda Hiperimpulsor']
+
+        print(tabla_estadisticas)
+
+    def generar_tabla_velocidad(self):
+        clases = []
+        velocidades = []
+        for nave in self.lista_naves:
+            #Se reemplazan los n/a por cero para poder realizar los calculos
             if nave.velocidad_maxima_atmosfera == "n/a":
                 nave.velocidad_maxima_atmosfera = 0
             #Se leen los ultimos 2 caracteres del string para verificar si incluyen "km" como unidad de medida
@@ -238,32 +281,40 @@ class moduloNave:
                 #De incluir "km" al final del string, se eliminan dichos caracteres para obtener solo el valor numerico y poder realizar los calculos
                     nave.velocidad_maxima_atmosfera = nave.velocidad_maxima_atmosfera[:-2]
             velocidades.append(float(nave.velocidad_maxima_atmosfera))
+        #Se crea el dataframe de pandas con las listas creadas anteriormente
+        df = pd.DataFrame({
+            'Clase': clases,
+            'Velocidad max atmosfera': velocidades
+        })
+
+        #Se agrupa por clase y se calculan las estadísticas
+        tabla_estadisticas = df.groupby('Clase')['Velocidad max atmosfera'].agg(['mean', 'max', 'min']).reset_index()
+        tabla_estadisticas['moda'] = df.groupby('Clase')['Velocidad max atmosfera'].apply(lambda x: x.mode()[0]).values
+
+        #Se renombran las columnas para mayor claridad
+        tabla_estadisticas.columns = ['Clase', 'Promedio Velocidades', 'Máximo Velocidades', 'Mínimo Velocidades', 'Moda Velocidades']
+
+        print(tabla_estadisticas)
+
+    def generar_tabla_costo(self):
+        clases = []
+        costos_creditos = []
+        for nave in self.lista_naves:
+            #Se reemplazan los n/a por cero para poder realizar los calculos
             if nave.costo == "n/a" or nave.costo == "unknown":
                 nave.costo = 0
-            costo_creditos.append(float(nave.costo))
-            
-        data = {
-        'Nombre de nave': nombres,
-        'Clasificación de hiperimpulsor': hiperimpulsores,
-        'MGLT': MGLT,
-        'Velocidad máxima en atmósfera': velocidades,
-        'Costo (en créditos)': costo_creditos
-        }
-        
-        #Se crea el DataFrame de Pandas
-        df = pd.DataFrame(data)
-        #Se calculan las estadísticas por cada atributo de las naves
-        stats = df.groupby('Nombre de nave').agg({
-        'Clasificación de hiperimpulsor': [mean, mode, 'min', 'max'],
-        'MGLT': [mean, mode, 'min', 'max'],
-        'Velocidad máxima en atmósfera': [mean, mode, 'min', 'max'],
-        'Costo (en créditos)': [mean, mode, 'min', 'max']
+            costos_creditos.append(float(nave.costo))
+        #Se crea el dataframe de pandas con las listas creadas anteriormente
+        df = pd.DataFrame({
+            'Clase': clases,
+            'Costo en Creditos': costos_creditos
         })
-        #Se le da nombre a las columnas resultantes
-        stats.columns = ['Promedio Hiperimpulsor', 'Moda Hiperimpulsor', 'Mínimo Hiperimpulsor', 'Máximo Hiperimpulsor',
-        'Promedio MGLT', 'Moda MGLT', 'Mínimo MGLT', 'Máximo MGLT',
-        'Promedio Velocidad', 'Moda Velocidad', 'Mínimo Velocidad', 'Máximo Velocidad',
-        'Promedio Costo', 'Moda Costo', 'Mínimo Costo', 'Máximo Costo'
-        ]
-        stats = stats.round(2)
-        print(stats)
+
+        #Se agrupa por clase y se calculan las estadísticas
+        tabla_estadisticas = df.groupby('Clase')['Costo en Creditos'].agg(['mean', 'max', 'min']).reset_index()
+        tabla_estadisticas['moda'] = df.groupby('Clase')['Costo en Creditos'].apply(lambda x: x.mode()[0]).values
+
+        #Se renombran las columnas para mayor claridad
+        tabla_estadisticas.columns = ['Clase', 'Promedio Costos', 'Máximo Costos', 'Mínimo Costos', 'Moda Costos']
+
+        print(tabla_estadisticas)
